@@ -19,4 +19,8 @@ eureka:
     lease-expiration-duration-in-seconds: 10 # 10秒不发送就过期
     prefer-ip-address: true # 返回eureka的是ip，而不是主机名
     ip-address: 127.0.0.1 # 设置返回的ip是啥
-#    instance-id: ${spring.application.name}:${server.port}
+    instance-id: ${spring.application.name}:${server.port}
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+

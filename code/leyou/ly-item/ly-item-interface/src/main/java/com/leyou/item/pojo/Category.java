@@ -11,7 +11,7 @@ import javax.persistence.Table;
 /**
  * @Author: cuzz
  * @Date: 2018/11/1 10:16
- * @Description:
+ * @Description: 分类
  */
 @Table(name="tb_category")
 @Data
