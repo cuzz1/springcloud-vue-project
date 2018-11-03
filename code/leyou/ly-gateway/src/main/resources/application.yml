@@ -14,10 +14,14 @@ eureka:
     instance-id: ${spring.application.name}:${server.port}
 zuul:
   prefix: /api # 添加路由前缀
-#  retryable: true
+  retryable: true
   routes:
     # 微服务名: 要映射到到地址
     item-service: /item/** # 将商品微服务映射到/item/**
+    upload-service:
+      path: /upload/** # 将上传微服务映射到/upload/**
+      serviceId: upload-service
+      strip-prefix : false
 ribbon:
   ConnectTimeout: 250 # 连接超时时间(ms)
   ReadTimeout: 2000 # 通信超时时间(ms)
