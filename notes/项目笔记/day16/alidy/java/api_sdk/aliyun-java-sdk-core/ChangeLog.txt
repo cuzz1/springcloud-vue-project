@@ -1,0 +1,27 @@
+2017-09-22 Version: 3.3.1
+1,  修正在网络连接发生重置时抛出 NullPointerException的问题。在连接重置时SDK执行默认重试策略。
+
+2017-09-22 Version: 3.3.0
+1,  支持使用STS Token调用SDK访问API。
+2,  支持使用RoleArn调用SDK，SDK进行AssumeRole获取授权信息并自动Rotate。
+3,  支持在ECS上利用Metadata Service进行“无AK”访问。
+
+2017-09-06 Version: 3.2.10
+1, 修改IoT套件美西和新加坡节点的endpoint
+
+2017-08-25 Version: 3.2.9
+1,  EMR增加德国和张北region的SDK endpoint
+
+2017-08-14 Version: 3.2.8
+1, 修复了在某些场景下会导致NoSuchMethod的bug
+
+2017-08-11 Version: 3.2.7
+1, 解决不支持body参数的bug
+
+2017-07-27 Version: 3.2.6
+1, 支持自动寻址，自动寻址endpoint缓存失效时间为1小时
+2, 手工调用addEndpoint方法添加endpoint优先级高于自动寻址
+
+2017-07-25 Version: 3.2.5
+1, 修改IoT套件在华东2个Region上的endpoint。
+

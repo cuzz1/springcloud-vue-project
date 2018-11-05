@@ -1,0 +1,22 @@
+redis：
+- redis的缓存击穿
+- redis的热点key
+- redis的缓存失效
+- redis的事务
+- redis的持久化
+- redis的哨兵
+- redis的分片
+- redis的分布式锁
+
+MQ：
+- MQ消息丢失
+- MQ的消息堆积
+- MQ的消息重复消费
+
+MySQL：
+- sql优化
+- 数据库设计优化
+- 引擎：innodb ，mysam
+- mysql：读写分离
+- mysql：分库分表
+- 视图、存储过程、索引、函数
