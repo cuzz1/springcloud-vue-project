@@ -18,9 +18,12 @@ public enum ExceptionEnum {
     CATEGORY_NOT_FOUND(404, "商品分类没有找到"),
     SPEC_GROUP_NOT_FOUND(404, "商品规格组没有查到"),
     BRAND_SAVE_ERROR(500, "新增品牌失败"),
+    BRAND_NOT_FOUND(404, "品牌没有找到"),
     UPLOAD_FILE_ERROR(500, "文件上传失败"),
     INVALID_FILE_TYPE(400, "无效文件类型"),
-    SPEC_PARAM_NOT_FOUND(404,"商品规格参数不存在");
+    SPEC_PARAM_NOT_FOUND(404,"商品规格参数不存在"),
+    GOODS_NOT_FOUND(404,"商品不存在");
+
 
     private int code;
     private String msg;
