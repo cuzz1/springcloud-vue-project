@@ -5,6 +5,7 @@ import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: cuzz
@@ -34,4 +35,9 @@ public class Spu {
     private String cname;// 商品分类名称
     @Transient
     private String bname;// 品牌名称
+    @Transient
+    private List<Sku> skus;
+    @Transient
+    private SpuDetail spuDetail;
+
 }
