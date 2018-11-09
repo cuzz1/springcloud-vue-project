@@ -2,6 +2,7 @@ package com.leyou.item.web;
 
 import com.leyou.common.vo.PageResult;
 import com.leyou.item.pojo.Spu;
+import com.leyou.item.pojo.SpuDetail;
 import com.leyou.item.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,5 +36,17 @@ public class GoodsController {
     public ResponseEntity<Void> saveGoods(@RequestBody Spu spu) {
         goodsService.saveGoods(spu);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
+    /**
+     * 根据id查询商品细节的方法
+     * @param id
+     * @return
+     */
+    @GetMapping("spu/detail/{id}")
+    public ResponseEntity<SpuDetail> querySpuDetailById(@PathVariable("id")Long id) {
+        return ResponseEntity.ok(goodsService.querySpuDetailByid(id));
+
     }
 }

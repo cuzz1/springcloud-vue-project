@@ -157,4 +157,12 @@ public class GoodsService {
             throw new LyException(ExceptionEnum.GOODS_SAVE_ERROR);
         }
     }
+
+    public SpuDetail querySpuDetailByid(Long id) {
+        SpuDetail spuDetail = spuDetailMapper.selectByPrimaryKey(id);
+        if (spuDetail == null) {
+            throw new LyException(ExceptionEnum.SPU_DETAIL_NOT_FOUND);
+        }
+        return spuDetail;
+    }
 }
