@@ -9,10 +9,6 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author: HuYi.Zhang
- * @create: 2018-04-25 09:13
- **/
 public class NumberUtils {
 
     public static boolean isInt(Double num) {
@@ -28,7 +24,17 @@ public class NumberUtils {
         if(str == null || str.trim().equals("")){
             return false;
         }
-        return str.matches("^\\d+$");
+        return str.matches("^\\d+\\.?\\d+$");
+    }
+
+    public static double toDouble(String s){
+        if(s == null){
+            return 0;
+        }
+        if(!isDigit(s)){
+            return 0;
+        }
+        return Double.valueOf(s);
     }
 
     /**

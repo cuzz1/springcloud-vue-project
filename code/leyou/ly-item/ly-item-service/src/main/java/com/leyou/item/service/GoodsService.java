@@ -165,4 +165,14 @@ public class GoodsService {
         }
         return spuDetail;
     }
+
+    public List<Sku> querySkusBySpuId(Long id) {
+        Sku sku = new Sku();
+        sku.setSpuId(id);
+        List<Sku> skus = skuMapper.select(sku);
+        if (CollectionUtils.isEmpty(skus)) {
+            throw new LyException(ExceptionEnum.GOODS_SKU_NOT_FOUND);
+        }
+        return skus;
+    }
 }

@@ -24,7 +24,8 @@ public enum ExceptionEnum {
     INVALID_FILE_TYPE(400, "无效文件类型"),
     SPEC_PARAM_NOT_FOUND(404,"商品规格参数不存在"),
     GOODS_NOT_FOUND(404,"商品不存在"),
-    SPU_DETAIL_NOT_FOUND(404, "商品详情不存在");
+    SPU_DETAIL_NOT_FOUND(404, "商品详情不存在"),
+    GOODS_SKU_NOT_FOUND(404,"sku没有找到");
 
 
     private int code;

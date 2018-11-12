@@ -2,6 +2,10 @@ package com.leyou.item.api;
 
 import com.leyou.common.vo.PageResult;
 import com.leyou.item.pojo.Brand;
+import com.leyou.item.pojo.Sku;
+import com.leyou.item.pojo.Spu;
+import com.leyou.item.pojo.SpuDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,42 +20,35 @@ import java.util.List;
  */
 public interface GoodsApi {
     /**
-     * 分页查询品牌
+     * 分页查询spu
      * @param page
      * @param rows
-     * @param sortBy
-     * @param desc
+     * @param saleable
      * @param key
-     */
-    @GetMapping("page")
-    PageResult<Brand> queryBrandByPage(
-            @RequestParam(value = "page", defaultValue = "1") Integer page,
-            @RequestParam(value = "rows", defaultValue = "5") Integer rows,
-            @RequestParam(value = "sortBy", required = false) String sortBy,
-            @RequestParam(value = "desc", defaultValue = "false") Boolean desc,
-            @RequestParam(value = "key", required = false) String key);
-
-    /**
-     * 新增品牌
-     * @param brand
-     * @param cids
-     */
-    @PostMapping
-    // 传入 "1,2,3"的字符串可以解析为列表
-    Void saveBrand(Brand brand, @RequestParam("cids") List<Long> cids);
-
-    /**
-     * 根据分类查询品牌
-     * @param cid
      * @return
      */
-    @GetMapping("cid/{cid}")
-    List<Brand> queryBrandByCategory(@PathVariable("cid") Long cid);
+    @GetMapping("spu/page")
+    PageResult<Spu> querySpuByPage(
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "rows", defaultValue = "5") Integer rows,
+            @RequestParam(value = "saleable", required = false) Boolean saleable,
+            @RequestParam(value = "key", required = false) String key);
+
+
 
     /**
-     * 根据id查询品牌
+     * 根据spu的id查询sku
      * @param id
+     * @return
      */
-    @GetMapping("{id}")
-    Brand queryBrandById(@PathVariable("id") Long id);
+    @GetMapping("sku/list")
+    List<Sku> querySkuBySpuId(@RequestParam("id") Long id);
+
+    /**
+     * 根据spu商品id查询详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/spu/detail/{id}")
+    SpuDetail querySpuDetailById(@PathVariable("id") Long id);
 }
