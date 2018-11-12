@@ -5,6 +5,7 @@ import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
 import com.leyou.common.utils.JsonUtils;
 import com.leyou.common.utils.NumberUtils;
+import com.leyou.common.vo.PageResult;
 import com.leyou.item.pojo.*;
 import com.leyou.item.vo.SkuVo;
 import le.com.search.client.BrandClient;
@@ -12,8 +13,19 @@ import le.com.search.client.CategoryClient;
 import le.com.search.client.GoodsClient;
 import le.com.search.client.SpecificationClient;
 import le.com.search.pojo.Goods;
+import le.com.search.pojo.SearchRequest;
+import le.com.search.repository.GoodsRepository;
+import lombok.ToString;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -38,6 +50,9 @@ public class SearchService {
 
     @Autowired
     private BrandClient brandClient;
+
+    @Autowired
+    GoodsRepository repository;
 
     public Goods buildGoods(Spu spu) {
 
@@ -178,5 +193,24 @@ public class SearchService {
             }
         }
         return result;
+    }
+
+    public PageResult<Goods> search(SearchRequest request) {
+        int page = request.getPage() - 1; // elasicsearch默认page是从0开始
+        int size = request.getSize();
+        // 查询构建器
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+        // 结果过滤
+        queryBuilder.withSourceFilter(new FetchSourceFilter(new String[]{"id","skus","subTitle"}, null));
+        // 分页
+        queryBuilder.withPageable(PageRequest.of(page, size));
+        // 过滤
+        queryBuilder.withQuery(QueryBuilders.matchQuery("all", request.getKey()));
+        // 查询
+        Page<Goods> result = repository.search(queryBuilder.build());
+        long totalElements = result.getTotalElements();
+        long totalPages = result.getTotalPages();
+        List<Goods> content = result.getContent();
+        return new PageResult<Goods>(totalElements, totalPages, content);
     }
 }
