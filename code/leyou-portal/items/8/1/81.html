@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+	<title>乐优商城--商品详情页</title>
+
+    <link rel="stylesheet" type="text/css" href="http://www.leyou.com/css/webbase.css" />
+    <link rel="stylesheet" type="text/css" href="http://www.leyou.com/css/pages-item.css" />
+    <link rel="stylesheet" type="text/css" href="http://www.leyou.com/css/pages-zoom.css" />
+    <link rel="stylesheet" type="text/css" href="http://www.leyou.com/css/widget-cartPanelView.css" />
+
+	<style type="text/css">
+		.goods-intro-list li {
+			display: inline-block;
+			width: 300px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<!-- 头部栏位 -->
+	<!--页面顶部，由js动态加载-->
+	<div id="itemApp">
+	<div id="nav-bottom">
+		<ly-top />
+	</div>
+
+	<div  class="py-container">
+		<div id="item">
+			<div class="crumb-wrap">
+				<ul class="sui-breadcrumb">
+					<li>
+						<a href="#">手机</a>
+					</li>
+					<li>
+						<a href="#">手机通讯</a>
+					</li>
+					<li>
+						<a href="#">手机</a>
+					</li>
+					<li>
+						<a href="#">华为（HUAWEI）</a>
+					</li>
+					<li class="active">华为（HUAWEI） nova...</li>
+				</ul>
+			</div>
+			<!--product-info-->
+			<div class="product-info">
+				<div class="fl preview-wrap">
+					<!--放大镜效果-->
+					<div class="zoom">
+						<!--默认第一个预览-->
+						<div id="preview" class="spec-preview">
+							<span class="jqzoom"><img width="400px" height="400px" :jqimg="images[0]" :src="images[0]"
+							/></span>
+						</div>
+						<!--下方的缩略图-->
+						<div class="spec-scroll">
+							<a class="prev">&lt;</a>
+							<!--左右按钮-->
+							<div class="items">
+								<ul>
+									<li v-for="(url,i) in images" :key="i">
+										<img :src="url" :bimg="url" onmousemove="preview(this)" /></li>
+								</ul>
+							</div>
+							<a class="next">&gt;</a>
+						</div>
+					</div>
+				</div>
+				<div class="fr itemInfo-wrap">
+					<div class="sku-name">
+						<h4 v-html="sku.title"></h4>
+					</div>
+					<div class="news"><span>支持京东配送到付 送实用好礼 今日下单默认送延保一年 ，美颜自拍！<a href="https://item.jd.com/26509792446.html" target="_blank">华为nova3E热卖中</a></span></div>
+					<div class="summary">
+						<div class="summary-wrap">
+							<div class="fl title"><i>价　　格</i></div>
+							<div class="fl price">
+								<i>¥</i><em v-text="formatPrice(sku.price)"></em><span>降价通知</span>
+							</div>
+							<div class="fr remark"><i>累计评价</i><em>612188</em></div>
+						</div>
+						<div class="summary-wrap">
+							<div class="fl title"><i>促　　销</i></div>
+							<div class="fl fix-width">
+								<i class="red-bg">加价购</i>
+								<em class="t-gray">满999.00另加20.00元，或满1999.00另加30.00元，或满2999.00另加40.00元，即可在购物车换购热销商品</em>
+							</div>
+						</div>
+					</div>
+					<div class="support">
+						<div class="summary-wrap">
+							<div class="fl title"><i>支　　持</i></div>
+							<div class="fl fix-width">
+								<em class="t-gray">以旧换新，闲置手机回收  4G套餐超值抢  礼品购</em>
+							</div>
+						</div>
+						<div class="summary-wrap">
+							<div class="fl title">
+								<i>配 送 至</i>
+							</div>
+							<div class="fl fix-width">
+								<em class="t-gray">上海 <span v-html="sku.stock.stock > 0 ? '有货' : '无货'"></span></em>
+							</div>
+						</div>
+					</div>
+					<div class="clearfix choose">
+						<div id="specification" class="summary-wrap clearfix">
+							<dl v-for="(options,k) in specTemplate" :key="k">
+								<dt><div style="width: 80px" class="fl title">选择<i v-text="k"></i>:</div></dt>
+								<dd v-for="(option,i) in options" :key="i" @click="indexes[k] = i">
+									<a href="javascript:;" :class="{selected:i === indexes[k]}">{{option}}
+										<span v-show="i === indexes[k]" title="点击取消选择">&nbsp;</span>
+									</a>
+								</dd>
+							</dl>
+						</div>
+						<div class="summary-wrap">
+							<div class="fl title">
+								<div class="control-group">
+									<div class="controls">
+										<input autocomplete="off" type="text" disabled v-model="num" minnum="1" class="itxt" />
+										<a href="javascript:void(0)" @click="num++" class="increment plus">+</a>
+										<a href="javascript:void(0)" @click="decrement" class="increment mins">-</a>
+									</div>
+								</div>
+							</div>
+							<div class="fl">
+								<ul class="btn-choose unstyled">
+									<li>
+										<a href="javascript:void(0)" @click="addCart" target="_blank" class="sui-btn  btn-danger addshopcar">加入购物车</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--product-detail-->
+			<div class="clearfix product-detail">
+				<div class="fl aside">
+					<ul class="sui-nav nav-tabs tab-wraped">
+						<li class="active">
+							<a href="#index" data-toggle="tab">
+								<span>相关分类</span>
+							</a>
+						</li>
+						<li>
+							<a href="#profile" data-toggle="tab">
+								<span>推荐品牌</span>
+							</a>
+						</li>
+					</ul>
+					<div class="tab-content tab-wraped">
+						<div id="index" class="tab-pane active">
+							<ul class="part-list unstyled">
+								<li>手机</li>
+								<li>手机壳</li>
+								<li>内存卡</li>
+								<li>Iphone配件</li>
+								<li>贴膜</li>
+								<li>手机耳机</li>
+								<li>移动电源</li>
+								<li>平板电脑</li>
+							</ul>
+							<ul class="goods-list unstyled">
+								<li>
+									<div class="list-wrap">
+										<div class="p-img">
+											<img src="http://www.leyou.com/img/_/part01.png" />
+										</div>
+										<div class="attr">
+											<em>Apple苹果iPhone 6s (A1699)</em>
+										</div>
+										<div class="price">
+											<strong>
+											<em>¥</em>
+											<i>6088.00</i>
+										</strong>
+										</div>
+										<div class="operate">
+											<a href="javascript:void(0);" class="sui-btn btn-bordered">加入购物车</a>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="list-wrap">
+										<div class="p-img">
+											<img src="http://www.leyou.com/img/_/part02.png" />
+										</div>
+										<div class="attr">
+											<em>Apple苹果iPhone 6s (A1699)</em>
+										</div>
+										<div class="price">
+											<strong>
+											<em>¥</em>
+											<i>6088.00</i>
+										</strong>
+										</div>
+										<div class="operate">
+											<a href="javascript:void(0);" class="sui-btn btn-bordered">加入购物车</a>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="list-wrap">
+										<div class="p-img">
+											<img src="http://www.leyou.com/img/_/part03.png" />
+										</div>
+										<div class="attr">
+											<em>Apple苹果iPhone 6s (A1699)</em>
+										</div>
+										<div class="price">
+											<strong>
+											<em>¥</em>
+											<i>6088.00</i>
+										</strong>
+										</div>
+										<div class="operate">
+											<a href="javascript:void(0);" class="sui-btn btn-bordered">加入购物车</a>
+										</div>
+									</div>
+									<div class="list-wrap">
+										<div class="p-img">
+											<img src="http://www.leyou.com/img/_/part02.png" />
+										</div>
+										<div class="attr">
+											<em>Apple苹果iPhone 6s (A1699)</em>
+										</div>
+										<div class="price">
+											<strong>
+											<em>¥</em>
+											<i>6088.00</i>
+										</strong>
+										</div>
+										<div class="operate">
+											<a href="javascript:void(0);" class="sui-btn btn-bordered">加入购物车</a>
+										</div>
+									</div>
+									<div class="list-wrap">
+										<div class="p-img">
+											<img src="http://www.leyou.com/img/_/part03.png" />
+										</div>
+										<div class="attr">
+											<em>Apple苹果iPhone 6s (A1699)</em>
+										</div>
+										<div class="price">
+											<strong>
+											<em>¥</em>
+											<i>6088.00</i>
+										</strong>
+										</div>
+										<div class="operate">
+											<a href="javascript:void(0);" class="sui-btn btn-bordered">加入购物车</a>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div id="profile" class="tab-pane">
+							<p>推荐品牌</p>
+						</div>
+					</div>
+				</div>
+				<div class="fr detail">
+					<div class="clearfix fitting">
+						<h4 class="kt">选择搭配</h4>
+						<div class="good-suits">
+							<div class="fl master">
+								<div class="list-wrap">
+									<div class="p-img">
+										<img src="http://www.leyou.com/img/_/l-m01.png" />
+									</div>
+									<em>￥5299</em>
+									<i>+</i>
+								</div>
+							</div>
+							<div class="fl suits">
+								<ul class="suit-list">
+									<li class="">
+										<div>
+											<img src="http://www.leyou.com/img/_/dp01.png" />
+										</div>
+										<i>Feless费勒斯VR</i>
+										<label data-toggle="checkbox" class="checkbox-pretty">
+    <input type="checkbox"><span>39</span>
+  </label>
+									</li>
+									<li class="">
+										<div><img src="http://www.leyou.com/img/_/dp02.png" /> </div>
+										<i>Feless费勒斯VR</i>
+										<label data-toggle="checkbox" class="checkbox-pretty">
+    <input type="checkbox"><span>50</span>
+  </label>
+									</li>
+									<li class="">
+										<div><img src="http://www.leyou.com/img/_/dp03.png" /></div>
+										<i>Feless费勒斯VR</i>
+										<label data-toggle="checkbox" class="checkbox-pretty">
+    <input type="checkbox"><span>59</span>
+  </label>
+									</li>
+									<li class="">
+										<div><img src="http://www.leyou.com/img/_/dp04.png" /></div>
+										<i>Feless费勒斯VR</i>
+										<label data-toggle="checkbox" class="checkbox-pretty">
+    <input type="checkbox"><span>99</span>
+  </label>
+									</li>
+								</ul>
+							</div>
+							<div class="fr result">
+								<div class="num">已选购0件商品</div>
+								<div class="price-tit"><strong>套餐价</strong></div>
+								<div class="price">￥5299</div>
+								<button class="sui-btn  btn-danger addshopcar">加入购物车</button>
+							</div>
+						</div>
+					</div>
+					<div class="tab-main intro">
+						<ul class="sui-nav nav-tabs tab-wraped">
+							<li class="active">
+								<a href="#one" data-toggle="tab">
+									<span>商品介绍</span>
+								</a>
+							</li>
+							<li>
+								<a href="#two" data-toggle="tab">
+									<span>规格与包装</span>
+								</a>
+							</li>
+							<li>
+								<a href="#three" data-toggle="tab">
+									<span>售后保障</span>
+								</a>
+							</li>
+							<li>
+								<a href="#four" data-toggle="tab">
+									<span>商品评价</span>
+								</a>
+							</li>
+							<li>
+								<a href="#five" data-toggle="tab">
+									<span>手机社区</span>
+								</a>
+							</li>
+						</ul>
+						<div class="clearfix"></div>
+						<div class="tab-content tab-wraped">
+							<div id="one" class="tab-pane active">
+								<ul class="goods-intro-list unstyled" style="list-style: none;">
+									<li >分辨率：1920*1080(FHD)</li>
+									<li>后置摄像头：1200万像素</li>
+									<li>前置摄像头：500万像素</li>
+									<li>核 数：其他</li>
+									<li>频 率：以官网信息为准</li>
+									<li>品牌： Apple</li>
+									<li>商品名称：APPLEiPhone 6s Plus</li>
+									<li>商品编号：1861098</li>
+									<li>商品毛重：0.51kg</li>
+									<li>商品产地：中国大陆</li>
+									<li>热点：指纹识别，Apple Pay，金属机身，拍照神器</li>
+									<li>系统：苹果（IOS）</li>
+									<li>像素：1000-1600万</li>
+									<li>机身内存：64GB</li>
+								</ul>
+								<div class="intro-detail"><img src="//img30.360buyimg.com/popWareDetail/jfs/t3220/258/3721775601/261465/cef0ca37/57f9bdf7Nd9a5e981.jpg" alt="" id="48da37dd81cf487eae2de6df17b889ef" /><span style="color: rgb(255, 0, 0); font-family: tahoma, arial, "Microsoft YaHei", "Hiragino Sans GB", u5b8bu4f53, sans-serif;font-size:medium; white-space: normal;">温馨提示：因近期公开版全网通货源紧张，默认发移动全网通</span><span style="color: rgb(255, 0, 0); font-family: tahoma, arial, "Microsoft YaHei", "Hiragino Sans GB", u5b8bu4f53, sans-serif;font-size:medium; white-space: normal;">介意慎拍~</span><span style="color: rgb(255, 0, 0); font-family: tahoma, arial, "Microsoft YaHei", "Hiragino Sans GB", u5b8bu4f53, sans-serif;font-size:medium; white-space: normal;">&nbsp;<br /></span><span style="color: rgb(255, 0, 0); font-family: tahoma, arial, "Microsoft YaHei", "Hiragino Sans GB", u5b8bu4f53, sans-serif;font-size:medium; white-space: normal;">移动全网通除了有移动logo外，网络均不影响使用（在插入两张sim卡时，只有一张为移动sim卡时，即默认移动卡为主卡，另外一张sim卡只能使用2G通话不支持数据流量）</span><img src="//img30.360buyimg.com/popWareDetail/jfs/t3244/293/3812757873/188755/7157ea08/57f9bdfdN1d61f53f.jpg" alt="" id="62f6b60b37f74b0cbb7f22ecc439d821" /><span style="font-family: tahoma, arial, "Microsoft YaHei", "Hiragino Sans GB", u5b8bu4f53, sans-serif; white-space: normal;"><br /><span style="color: rgb(255, 0, 0); font-size: 16px;"><img src="//img10.360buyimg.com/imgzone/jfs/t9130/9/1918904685/339294/1b03cdfc/59cc6ef8N7b2174f3.jpg" alt="" /></span><br /><span style="color:#ff0000;font-size: 16px;"><img src="//img10.360buyimg.com/imgzone/jfs/t9853/79/344661538/227606/3747985d/59cc6f0aN7dbd8f2b.jpg" alt="" /></span><br /><span style="color:#ff0000;font-size: 16px;"><img src="//img10.360buyimg.com/imgzone/jfs/t8842/205/1889653609/385310/9c03d4d8/59cc6f0aN1c3cf95a.jpg" alt="" /></span><br /><span style="color:#ff0000;font-size: 16px;"><img src="//img10.360buyimg.com/imgzone/jfs/t10738/39/325488474/376030/cdb53374/59cc6f07Nce3a4ecb.jpg" alt="" /></span><br /><span style="color:#ff0000;font-size: 16px;"><img src="//img10.360buyimg.com/imgzone/jfs/t10843/361/343287336/400041/7a992fda/59cc6f0aNa1687759.jpg" alt="" /></span><br /><span style="color:#ff0000;font-size: 16px;"><img src="//img10.360buyimg.com/imgzone/jfs/t8503/109/2371713791/379637/29da2a9/59cc6f0aNf724af8e.jpg" alt="" /><img src="//img10.360buyimg.com/imgzone/jfs/t10471/55/326963094/162996/7c446de9/59cc6f0aN7f42c5ff.jpg" alt="" /></span></span><span style="font-size:xx-small;color:#666666;background-color: rgb(255, 255, 255);">&nbsp;</span><span style="color:#ffffff;">&nbsp;</span><img src="//img30.360buyimg.com/popWareDetail/jfs/t3508/42/1639313592/262709/7530603c/582d205fN09f0b8ea.jpg" alt="" id="7e251c0edd1e4f8ba0baf2322655a466" />&nbsp;<img src="//img30.360buyimg.com/popWareDetail/jfs/t3706/265/1628734984/540228/8f2649f4/582d2060Nd4796627.jpg" alt="" id="e4071c4796f24baebcf4cd0e1e1d6676" /> <img src="//img30.360buyimg.com/popWareDetail/jfs/t3814/220/168349353/215624/d0530855/5809ac45N467514cb.jpg" alt="" id="47c92bfa4d3544d7aebc7b99fcb10ba3" /> <img src="//img30.360buyimg.com/popWareDetail/jfs/t3184/180/3818455175/208598/8ca5e654/57f9d21aNe4672fbd.jpg" alt="" id="2071dfc8501a4d128cd157ef0946a119" /> <br /> <img src="//img30.360buyimg.com/popWareDetail/jfs/t3700/327/1636575398/281035/dd57b22e/582d2061Nfb1e3909.jpg" alt="" id="2fb0d293fc224fa79be2741cb5e44dd8" /> <img src="//img30.360buyimg.com/popWareDetail/jfs/t3286/159/4047226414/80994/583801f5/57f9d21bN0808e1ca.jpg" alt="" id="db3e0d36850e48f89b3dafe06f699fd6" /> <br /> <img src="//img30.360buyimg.com/popWareDetail/jfs/t3775/73/1599344663/140612/22ceb7ab/582d2061N387471d4.jpg" alt="" id="46af10c0921f43e1b746638f3fb7fe80" /> <img src="//img30.360buyimg.com/popWareDetail/jfs/t3136/207/3828791986/176715/ddcf6071/57f9d21cNc65e1bb6.jpg" alt="" id="9e989a1313224bbd9e8374b1ba979369" /><br /><img src="//img30.360buyimg.com/popWareDetail/jfs/t9019/315/398811190/220860/205dd691/59a76a6aN91df6507.jpg" alt="" />                        <br/></div>
+							</div>
+							<div id="two" class="tab-pane">
+								<dl v-for="s in specs" :key="s.group">
+									<dt>{{s.group}}</dt>
+									<dd v-for="p in s.params" :key="p.k">
+										<span>{{p.k}} : </span>
+										<span>{{p.v}}{{p.unit || ''}}</span>
+									</dd>
+								</dl>
+								<p>规格与包装</p>
+								<div>暂无</div>
+							</div>
+							<div id="three" class="tab-pane">
+								<p>售后保障</p>
+								<div>本产品全国联保，享受三包服务，质保期为：一年质保</div>
+							</div>
+							<div id="four" class="tab-pane">
+								<p>商品评价</p>
+							</div>
+							<div id="five" class="tab-pane">
+								<p>手机社区</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--like-->
+			<div class="clearfix"></div>
+			<div class="like">
+				<h4 class="kt">猜你喜欢</h4>
+				<div class="like-list">
+					<ul class="yui3-g">
+						<li class="yui3-u-1-6">
+							<div class="list-wrap">
+								<div class="p-img">
+									<img src="http://www.leyou.com/img/_/itemlike01.png" />
+								</div>
+								<div class="attr">
+									<em>DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</em>
+								</div>
+								<div class="price">
+									<strong>
+											<em>¥</em>
+											<i>3699.00</i>
+										</strong>
+								</div>
+								<div class="commit">
+									<i class="command">已有6人评价</i>
+								</div>
+							</div>
+						</li>
+						<li class="yui3-u-1-6">
+							<div class="list-wrap">
+								<div class="p-img">
+									<img src="http://www.leyou.com/img/_/itemlike02.png" />
+								</div>
+								<div class="attr">
+									<em>Apple苹果iPhone 6s/6s Plus 16G 64G 128G</em>
+								</div>
+								<div class="price">
+									<strong>
+											<em>¥</em>
+											<i>4388.00</i>
+										</strong>
+								</div>
+								<div class="commit">
+									<i class="command">已有700人评价</i>
+								</div>
+							</div>
+						</li>
+						<li class="yui3-u-1-6">
+							<div class="list-wrap">
+								<div class="p-img">
+									<img src="http://www.leyou.com/img/_/itemlike03.png" />
+								</div>
+								<div class="attr">
+									<em>DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</em>
+								</div>
+								<div class="price">
+									<strong>
+											<em>¥</em>
+											<i>4088.00</i>
+										</strong>
+								</div>
+								<div class="commit">
+									<i class="command">已有700人评价</i>
+								</div>
+							</div>
+						</li>
+						<li class="yui3-u-1-6">
+							<div class="list-wrap">
+								<div class="p-img">
+									<img src="http://www.leyou.com/img/_/itemlike04.png" />
+								</div>
+								<div class="attr">
+									<em>DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</em>
+								</div>
+								<div class="price">
+									<strong>
+											<em>¥</em>
+											<i>4088.00</i>
+										</strong>
+								</div>
+								<div class="commit">
+									<i class="command">已有700人评价</i>
+								</div>
+							</div>
+						</li>
+						<li class="yui3-u-1-6">
+							<div class="list-wrap">
+								<div class="p-img">
+									<img src="http://www.leyou.com/img/_/itemlike05.png" />
+								</div>
+								<div class="attr">
+									<em>DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</em>
+								</div>
+								<div class="price">
+									<strong>
+											<em>¥</em>
+											<i>4088.00</i>
+										</strong>
+								</div>
+								<div class="commit">
+									<i class="command">已有700人评价</i>
+								</div>
+							</div>
+						</li>
+						<li class="yui3-u-1-6">
+							<div class="list-wrap">
+								<div class="p-img">
+									<img src="http://www.leyou.com/img/_/itemlike06.png" />
+								</div>
+								<div class="attr">
+									<em>DELL戴尔Ins 15MR-7528SS 15英寸 银色 笔记本</em>
+								</div>
+								<div class="price">
+									<strong><em>¥</em><i>4088.00</i></strong>
+								</div>
+								<div class="commit">
+									<i class="command">已有700人评价</i>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	</div>
+
+	
+
+<script type="text/javascript" src="http://www.leyou.com/js/plugins/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#service").hover(function(){
+		$(".service").show();
+	},function(){
+		$(".service").hide();
+	});
+	$("#shopcar").hover(function(){
+		$("#shopcarlist").show();
+	},function(){
+		$("#shopcarlist").hide();
+	});
+
+})
+</script>
+<script type="text/javascript" src="http://www.leyou.com/js/model/cartModel.js"></script>
+<script type="text/javascript" src="http://www.leyou.com/js/plugins/jquery.easing/jquery.easing.min.js"></script>
+<script type="text/javascript" src="http://www.leyou.com/js/plugins/sui/sui.min.js"></script>
+<script type="text/javascript" src="http://www.leyou.com/js/plugins/jquery.jqzoom/jquery.jqzoom.js"></script>
+<script type="text/javascript" src="http://www.leyou.com/js/plugins/jquery.jqzoom/zoom.js"></script>
+</body>
+
+<script src="http://www.leyou.com/js/vue/vue.js"></script>
+<script src="http://www.leyou.com/js/axios.min.js"></script>
+<script src="http://www.leyou.com/js/common.js"></script>
+<script>
+	const spu = {"id":81,"brandId":8557,"cid1":74,"cid2":75,"cid3":76,"title":"\u534E\u4E3A\uFF08HUAWEI\uFF09 nova \u667A\u80FD\u624B\u673A 4G\u624B\u673A ","subTitle":"\u652F\u6301\u4EAC\u4E1C\u914D\u9001\u5230\u4ED8 \u9001\u5B9E\u7528\u597D\u793C \u4ECA\u65E5\u4E0B\u5355\u9ED8\u8BA4\u9001\u5EF6\u4FDD\u4E00\u5E74 \uFF0C\u7F8E\u989C\u81EA\u62CD\uFF01<a href=\"https:\/\/item.jd.com\/26509792446.html\" target=\"_blank\">\u534E\u4E3Anova3E\u70ED\u5356\u4E2D<\/a>","saleable":true,"valid":true,"createTime":"2018-04-21T15:57:48.000+08:00","lastUpdateTime":"2018-04-21T15:57:48.000+08:00","spuDetail":{"spuId":81,"description":"<img src=\"\/\/img30.360buyimg.com\/popWareDetail\/jfs\/t3220\/258\/3721775601\/261465\/cef0ca37\/57f9bdf7Nd9a5e981.jpg\" alt=\"\" id=\"48da37dd81cf487eae2de6df17b889ef\" \/><span style=\"color: rgb(255, 0, 0); font-family: tahoma, arial, \"Microsoft YaHei\", \"Hiragino Sans GB\", u5b8bu4f53, sans-serif;font-size:medium; white-space: normal;\">\u6E29\u99A8\u63D0\u793A\uFF1A\u56E0\u8FD1\u671F\u516C\u5F00\u7248\u5168\u7F51\u901A\u8D27\u6E90\u7D27\u5F20\uFF0C\u9ED8\u8BA4\u53D1\u79FB\u52A8\u5168\u7F51\u901A<\/span><span style=\"color: rgb(255, 0, 0); font-family: tahoma, arial, \"Microsoft YaHei\", \"Hiragino Sans GB\", u5b8bu4f53, sans-serif;font-size:medium; white-space: normal;\">\u4ECB\u610F\u614E\u62CD~<\/span><span style=\"color: rgb(255, 0, 0); font-family: tahoma, arial, \"Microsoft YaHei\", \"Hiragino Sans GB\", u5b8bu4f53, sans-serif;font-size:medium; white-space: normal;\">\u0026nbsp;<br \/><\/span><span style=\"color: rgb(255, 0, 0); font-family: tahoma, arial, \"Microsoft YaHei\", \"Hiragino Sans GB\", u5b8bu4f53, sans-serif;font-size:medium; white-space: normal;\">\u79FB\u52A8\u5168\u7F51\u901A\u9664\u4E86\u6709\u79FB\u52A8logo\u5916\uFF0C\u7F51\u7EDC\u5747\u4E0D\u5F71\u54CD\u4F7F\u7528\uFF08\u5728\u63D2\u5165\u4E24\u5F20sim\u5361\u65F6\uFF0C\u53EA\u6709\u4E00\u5F20\u4E3A\u79FB\u52A8sim\u5361\u65F6\uFF0C\u5373\u9ED8\u8BA4\u79FB\u52A8\u5361\u4E3A\u4E3B\u5361\uFF0C\u53E6\u5916\u4E00\u5F20sim\u5361\u53EA\u80FD\u4F7F\u75282G\u901A\u8BDD\u4E0D\u652F\u6301\u6570\u636E\u6D41\u91CF\uFF09<\/span><img src=\"\/\/img30.360buyimg.com\/popWareDetail\/jfs\/t3244\/293\/3812757873\/188755\/7157ea08\/57f9bdfdN1d61f53f.jpg\" alt=\"\" id=\"62f6b60b37f74b0cbb7f22ecc439d821\" \/><span style=\"font-family: tahoma, arial, \"Microsoft YaHei\", \"Hiragino Sans GB\", u5b8bu4f53, sans-serif; white-space: normal;\"><br \/><span style=\"color: rgb(255, 0, 0); font-size: 16px;\"><img src=\"\/\/img10.360buyimg.com\/imgzone\/jfs\/t9130\/9\/1918904685\/339294\/1b03cdfc\/59cc6ef8N7b2174f3.jpg\" alt=\"\" \/><\/span><br \/><span style=\"color:#ff0000;font-size: 16px;\"><img src=\"\/\/img10.360buyimg.com\/imgzone\/jfs\/t9853\/79\/344661538\/227606\/3747985d\/59cc6f0aN7dbd8f2b.jpg\" alt=\"\" \/><\/span><br \/><span style=\"color:#ff0000;font-size: 16px;\"><img src=\"\/\/img10.360buyimg.com\/imgzone\/jfs\/t8842\/205\/1889653609\/385310\/9c03d4d8\/59cc6f0aN1c3cf95a.jpg\" alt=\"\" \/><\/span><br \/><span style=\"color:#ff0000;font-size: 16px;\"><img src=\"\/\/img10.360buyimg.com\/imgzone\/jfs\/t10738\/39\/325488474\/376030\/cdb53374\/59cc6f07Nce3a4ecb.jpg\" alt=\"\" \/><\/span><br \/><span style=\"color:#ff0000;font-size: 16px;\"><img src=\"\/\/img10.360buyimg.com\/imgzone\/jfs\/t10843\/361\/343287336\/400041\/7a992fda\/59cc6f0aNa1687759.jpg\" alt=\"\" \/><\/span><br \/><span style=\"color:#ff0000;font-size: 16px;\"><img src=\"\/\/img10.360buyimg.com\/imgzone\/jfs\/t8503\/109\/2371713791\/379637\/29da2a9\/59cc6f0aNf724af8e.jpg\" alt=\"\" \/><img src=\"\/\/img10.360buyimg.com\/imgzone\/jfs\/t10471\/55\/326963094\/162996\/7c446de9\/59cc6f0aN7f42c5ff.jpg\" alt=\"\" \/><\/span><\/span><span style=\"font-size:xx-small;color:#666666;background-color: rgb(255, 255, 255);\">\u0026nbsp;<\/span><span style=\"color:#ffffff;\">\u0026nbsp;<\/span><img src=\"\/\/img30.360buyimg.com\/popWareDetail\/jfs\/t3508\/42\/1639313592\/262709\/7530603c\/582d205fN09f0b8ea.jpg\" alt=\"\" id=\"7e251c0edd1e4f8ba0baf2322655a466\" \/>\u0026nbsp;<img src=\"\/\/img30.360buyimg.com\/popWareDetail\/jfs\/t3706\/265\/1628734984\/540228\/8f2649f4\/582d2060Nd4796627.jpg\" alt=\"\" id=\"e4071c4796f24baebcf4cd0e1e1d6676\" \/> <img src=\"\/\/img30.360buyimg.com\/popWareDetail\/jfs\/t3814\/220\/168349353\/215624\/d0530855\/5809ac45N467514cb.jpg\" alt=\"\" id=\"47c92bfa4d3544d7aebc7b99fcb10ba3\" \/> <img src=\"\/\/img30.360buyimg.com\/popWareDetail\/jfs\/t3184\/180\/3818455175\/208598\/8ca5e654\/57f9d21aNe4672fbd.jpg\" alt=\"\" id=\"2071dfc8501a4d128cd157ef0946a119\" \/> <br \/> <img src=\"\/\/img30.360buyimg.com\/popWareDetail\/jfs\/t3700\/327\/1636575398\/281035\/dd57b22e\/582d2061Nfb1e3909.jpg\" alt=\"\" id=\"2fb0d293fc224fa79be2741cb5e44dd8\" \/> <img src=\"\/\/img30.360buyimg.com\/popWareDetail\/jfs\/t3286\/159\/4047226414\/80994\/583801f5\/57f9d21bN0808e1ca.jpg\" alt=\"\" id=\"db3e0d36850e48f89b3dafe06f699fd6\" \/> <br \/> <img src=\"\/\/img30.360buyimg.com\/popWareDetail\/jfs\/t3775\/73\/1599344663\/140612\/22ceb7ab\/582d2061N387471d4.jpg\" alt=\"\" id=\"46af10c0921f43e1b746638f3fb7fe80\" \/> <img src=\"\/\/img30.360buyimg.com\/popWareDetail\/jfs\/t3136\/207\/3828791986\/176715\/ddcf6071\/57f9d21cNc65e1bb6.jpg\" alt=\"\" id=\"9e989a1313224bbd9e8374b1ba979369\" \/><br \/><img src=\"\/\/img30.360buyimg.com\/popWareDetail\/jfs\/t9019\/315\/398811190\/220860\/205dd691\/59a76a6aN91df6507.jpg\" alt=\"\" \/>                        <br\/>","specTemplate":"{\"\u673A\u8EAB\u989C\u8272\":[\"\u73AB\u7470\u91D1\",\"\u9999\u69DF\u91D1\u767D\u8272\",\"\u7693\u6708\u94F6\",\"\u9999\u69DF\u91D1\u9ED1\u8272\"],\"\u5185\u5B58\":[\"4GB\"],\"\u673A\u8EAB\u5B58\u50A8\":[\"64GB\"]}","specifications":"[{\"group\":\"\u4E3B\u4F53\",\"params\":[{\"k\":\"\u54C1\u724C\",\"searchable\":false,\"global\":true,\"v\":\"\u534E\u4E3A\uFF08HUAWEI\uFF09\"},{\"k\":\"\u578B\u53F7\",\"searchable\":false,\"global\":true,\"v\":\"nova\"},{\"k\":\"\u4E0A\u5E02\u5E74\u4EFD\",\"searchable\":false,\"global\":true,\"numerical\":true,\"unit\":\"\u5E74\",\"v\":\"\u5176\u5B83\"}]},{\"group\":\"\u57FA\u672C\u4FE1\u606F\",\"params\":[{\"k\":\"\u673A\u8EAB\u989C\u8272\",\"searchable\":false,\"global\":false,\"options\":[\"\u73AB\u7470\u91D1\",\"\u9999\u69DF\u91D1\u767D\u8272\",\"\u7693\u6708\u94F6\",\"\u9999\u69DF\u91D1\u9ED1\u8272\"]},{\"k\":\"\u673A\u8EAB\u91CD\u91CF\uFF08g\uFF09\",\"searchable\":false,\"global\":true,\"numerical\":true,\"unit\":\"g\",\"v\":146},{\"k\":\"\u673A\u8EAB\u6750\u8D28\u5DE5\u827A\",\"searchable\":true,\"global\":true,\"v\":null}]},{\"group\":\"\u64CD\u4F5C\u7CFB\u7EDF\",\"params\":[{\"k\":\"\u64CD\u4F5C\u7CFB\u7EDF\",\"searchable\":true,\"global\":true,\"v\":\"Android\"}]},{\"group\":\"\u4E3B\u82AF\u7247\",\"params\":[{\"k\":\"CPU\u54C1\u724C\",\"searchable\":true,\"global\":true,\"v\":\"\u9A81\u9F99\uFF08Snapdragon)\"},{\"k\":\"CPU\u578B\u53F7\",\"searchable\":false,\"global\":true,\"v\":\"\u9A81\u9F99625\uFF08MSM8953\uFF09\"},{\"k\":\"CPU\u6838\u6570\",\"searchable\":true,\"global\":true,\"v\":\"\u516B\u6838\"},{\"k\":\"CPU\u9891\u7387\",\"searchable\":true,\"global\":true,\"numerical\":true,\"unit\":\"GHz\",\"v\":1.8}]},{\"group\":\"\u5B58\u50A8\",\"params\":[{\"k\":\"\u5185\u5B58\",\"searchable\":true,\"global\":false,\"numerical\":false,\"unit\":\"GB\",\"options\":[\"4GB\"]},{\"k\":\"\u673A\u8EAB\u5B58\u50A8\",\"searchable\":true,\"global\":false,\"numerical\":false,\"unit\":\"GB\",\"options\":[\"64GB\"]}]},{\"group\":\"\u5C4F\u5E55\",\"params\":[{\"k\":\"\u4E3B\u5C4F\u5E55\u5C3A\u5BF8\uFF08\u82F1\u5BF8\uFF09\",\"searchable\":true,\"global\":true,\"numerical\":true,\"unit\":\"\u82F1\u5BF8\",\"v\":5.0},{\"k\":\"\u5206\u8FA8\u7387\",\"searchable\":false,\"global\":true,\"v\":\"\u5176\u4ED6\"}]},{\"group\":\"\u6444\u50CF\u5934\",\"params\":[{\"k\":\"\u524D\u7F6E\u6444\u50CF\u5934\",\"searchable\":true,\"global\":true,\"numerical\":true,\"unit\":\"\u4E07\",\"v\":800.0},{\"k\":\"\u540E\u7F6E\u6444\u50CF\u5934\",\"searchable\":true,\"global\":true,\"numerical\":true,\"unit\":\"\u4E07\",\"v\":1200.0}]},{\"group\":\"\u7535\u6C60\u4FE1\u606F\",\"params\":[{\"k\":\"\u7535\u6C60\u5BB9\u91CF\uFF08mAh\uFF09\",\"searchable\":true,\"global\":true,\"numerical\":true,\"unit\":\"mAh\",\"v\":3020}]}]","packingList":"\u6682\u65E0","afterService":"\u672C\u4EA7\u54C1\u5168\u56FD\u8054\u4FDD\uFF0C\u4EAB\u53D7\u4E09\u5305\u670D\u52A1\uFF0C\u8D28\u4FDD\u671F\u4E3A\uFF1A\u4E00\u5E74\u8D28\u4FDD"},"skus":[{"id":10781492357,"spuId":81,"title":"\u534E\u4E3A\uFF08HUAWEI\uFF09 nova \u667A\u80FD\u624B\u673A 4G\u624B\u673A \u73AB\u7470\u91D1 (4G+64G)\u9AD8\u914D","images":"http:\/\/image.leyou.com\/images\/7\/14\/1524297466806.jpg","price":109900,"ownSpec":"{\"\u673A\u8EAB\u989C\u8272\":\"\u73AB\u7470\u91D1\",\"\u5185\u5B58\":\"4GB\",\"\u673A\u8EAB\u5B58\u50A8\":\"64GB\"}","indexes":"0_0_0","enable":true,"createTime":"2018-04-21T15:57:47.000+08:00","lastUpdateTime":"2018-04-21T15:57:47.000+08:00","stock":{"skuId":10781492357,"seckillStock":null,"seckillTotal":null,"stock":9999}},{"id":10781492358,"spuId":81,"title":"\u534E\u4E3A\uFF08HUAWEI\uFF09 nova \u667A\u80FD\u624B\u673A 4G\u624B\u673A \u9999\u69DF\u91D1\u767D\u8272 (4G+64G)\u9AD8\u914D","images":"http:\/\/image.leyou.com\/images\/7\/1\/1524297467351.jpg","price":108800,"ownSpec":"{\"\u673A\u8EAB\u989C\u8272\":\"\u9999\u69DF\u91D1\u767D\u8272\",\"\u5185\u5B58\":\"4GB\",\"\u673A\u8EAB\u5B58\u50A8\":\"64GB\"}","indexes":"1_0_0","enable":true,"createTime":"2018-04-21T15:57:47.000+08:00","lastUpdateTime":"2018-04-21T15:57:47.000+08:00","stock":{"skuId":10781492358,"seckillStock":null,"seckillTotal":null,"stock":9999}},{"id":10781492359,"spuId":81,"title":"\u534E\u4E3A\uFF08HUAWEI\uFF09 nova \u667A\u80FD\u624B\u673A 4G\u624B\u673A \u9999\u69DF\u91D1\u9ED1\u8272 (4G+64G)\u9AD8\u914D","images":"http:\/\/image.leyou.com\/images\/5\/5\/1524297468064.jpg","price":142900,"ownSpec":"{\"\u673A\u8EAB\u989C\u8272\":\"\u9999\u69DF\u91D1\u9ED1\u8272\",\"\u5185\u5B58\":\"4GB\",\"\u673A\u8EAB\u5B58\u50A8\":\"64GB\"}","indexes":"3_0_0","enable":true,"createTime":"2018-04-21T15:57:48.000+08:00","lastUpdateTime":"2018-04-21T15:57:48.000+08:00","stock":{"skuId":10781492359,"seckillStock":null,"seckillTotal":null,"stock":9999}},{"id":10987960993,"spuId":81,"title":"\u534E\u4E3A\uFF08HUAWEI\uFF09 nova \u667A\u80FD\u624B\u673A 4G\u624B\u673A \u7693\u6708\u94F6 (4G+64G)\u9AD8\u914D","images":"http:\/\/image.leyou.com\/images\/10\/5\/1524297467695.jpg","price":142900,"ownSpec":"{\"\u673A\u8EAB\u989C\u8272\":\"\u7693\u6708\u94F6\",\"\u5185\u5B58\":\"4GB\",\"\u673A\u8EAB\u5B58\u50A8\":\"64GB\"}","indexes":"2_0_0","enable":true,"createTime":"2018-04-21T15:57:48.000+08:00","lastUpdateTime":"2018-04-21T15:57:48.000+08:00","stock":{"skuId":10987960993,"seckillStock":null,"seckillTotal":null,"stock":9999}}]};
+	const specTemplate = JSON.parse("{\"\u673A\u8EAB\u989C\u8272\":[\"\u73AB\u7470\u91D1\",\"\u9999\u69DF\u91D1\u767D\u8272\",\"\u7693\u6708\u94F6\",\"\u9999\u69DF\u91D1\u9ED1\u8272\"],\"\u5185\u5B58\":[\"4GB\"],\"\u673A\u8EAB\u5B58\u50A8\":[\"64GB\"]}");
+	const specifications = JSON.parse("[{\"group\":\"\u4E3B\u4F53\",\"params\":[{\"k\":\"\u54C1\u724C\",\"searchable\":false,\"global\":true,\"v\":\"\u534E\u4E3A\uFF08HUAWEI\uFF09\"},{\"k\":\"\u578B\u53F7\",\"searchable\":false,\"global\":true,\"v\":\"nova\"},{\"k\":\"\u4E0A\u5E02\u5E74\u4EFD\",\"searchable\":false,\"global\":true,\"numerical\":true,\"unit\":\"\u5E74\",\"v\":\"\u5176\u5B83\"}]},{\"group\":\"\u57FA\u672C\u4FE1\u606F\",\"params\":[{\"k\":\"\u673A\u8EAB\u989C\u8272\",\"searchable\":false,\"global\":false,\"options\":[\"\u73AB\u7470\u91D1\",\"\u9999\u69DF\u91D1\u767D\u8272\",\"\u7693\u6708\u94F6\",\"\u9999\u69DF\u91D1\u9ED1\u8272\"]},{\"k\":\"\u673A\u8EAB\u91CD\u91CF\uFF08g\uFF09\",\"searchable\":false,\"global\":true,\"numerical\":true,\"unit\":\"g\",\"v\":146},{\"k\":\"\u673A\u8EAB\u6750\u8D28\u5DE5\u827A\",\"searchable\":true,\"global\":true,\"v\":null}]},{\"group\":\"\u64CD\u4F5C\u7CFB\u7EDF\",\"params\":[{\"k\":\"\u64CD\u4F5C\u7CFB\u7EDF\",\"searchable\":true,\"global\":true,\"v\":\"Android\"}]},{\"group\":\"\u4E3B\u82AF\u7247\",\"params\":[{\"k\":\"CPU\u54C1\u724C\",\"searchable\":true,\"global\":true,\"v\":\"\u9A81\u9F99\uFF08Snapdragon)\"},{\"k\":\"CPU\u578B\u53F7\",\"searchable\":false,\"global\":true,\"v\":\"\u9A81\u9F99625\uFF08MSM8953\uFF09\"},{\"k\":\"CPU\u6838\u6570\",\"searchable\":true,\"global\":true,\"v\":\"\u516B\u6838\"},{\"k\":\"CPU\u9891\u7387\",\"searchable\":true,\"global\":true,\"numerical\":true,\"unit\":\"GHz\",\"v\":1.8}]},{\"group\":\"\u5B58\u50A8\",\"params\":[{\"k\":\"\u5185\u5B58\",\"searchable\":true,\"global\":false,\"numerical\":false,\"unit\":\"GB\",\"options\":[\"4GB\"]},{\"k\":\"\u673A\u8EAB\u5B58\u50A8\",\"searchable\":true,\"global\":false,\"numerical\":false,\"unit\":\"GB\",\"options\":[\"64GB\"]}]},{\"group\":\"\u5C4F\u5E55\",\"params\":[{\"k\":\"\u4E3B\u5C4F\u5E55\u5C3A\u5BF8\uFF08\u82F1\u5BF8\uFF09\",\"searchable\":true,\"global\":true,\"numerical\":true,\"unit\":\"\u82F1\u5BF8\",\"v\":5.0},{\"k\":\"\u5206\u8FA8\u7387\",\"searchable\":false,\"global\":true,\"v\":\"\u5176\u4ED6\"}]},{\"group\":\"\u6444\u50CF\u5934\",\"params\":[{\"k\":\"\u524D\u7F6E\u6444\u50CF\u5934\",\"searchable\":true,\"global\":true,\"numerical\":true,\"unit\":\"\u4E07\",\"v\":800.0},{\"k\":\"\u540E\u7F6E\u6444\u50CF\u5934\",\"searchable\":true,\"global\":true,\"numerical\":true,\"unit\":\"\u4E07\",\"v\":1200.0}]},{\"group\":\"\u7535\u6C60\u4FE1\u606F\",\"params\":[{\"k\":\"\u7535\u6C60\u5BB9\u91CF\uFF08mAh\uFF09\",\"searchable\":true,\"global\":true,\"numerical\":true,\"unit\":\"mAh\",\"v\":3020}]}]");
+	const skus = [{"id":10781492357,"spuId":81,"title":"\u534E\u4E3A\uFF08HUAWEI\uFF09 nova \u667A\u80FD\u624B\u673A 4G\u624B\u673A \u73AB\u7470\u91D1 (4G+64G)\u9AD8\u914D","images":"http:\/\/image.leyou.com\/images\/7\/14\/1524297466806.jpg","price":109900,"ownSpec":"{\"\u673A\u8EAB\u989C\u8272\":\"\u73AB\u7470\u91D1\",\"\u5185\u5B58\":\"4GB\",\"\u673A\u8EAB\u5B58\u50A8\":\"64GB\"}","indexes":"0_0_0","enable":true,"createTime":"2018-04-21T15:57:47.000+08:00","lastUpdateTime":"2018-04-21T15:57:47.000+08:00","stock":{"skuId":10781492357,"seckillStock":null,"seckillTotal":null,"stock":9999}},{"id":10781492358,"spuId":81,"title":"\u534E\u4E3A\uFF08HUAWEI\uFF09 nova \u667A\u80FD\u624B\u673A 4G\u624B\u673A \u9999\u69DF\u91D1\u767D\u8272 (4G+64G)\u9AD8\u914D","images":"http:\/\/image.leyou.com\/images\/7\/1\/1524297467351.jpg","price":108800,"ownSpec":"{\"\u673A\u8EAB\u989C\u8272\":\"\u9999\u69DF\u91D1\u767D\u8272\",\"\u5185\u5B58\":\"4GB\",\"\u673A\u8EAB\u5B58\u50A8\":\"64GB\"}","indexes":"1_0_0","enable":true,"createTime":"2018-04-21T15:57:47.000+08:00","lastUpdateTime":"2018-04-21T15:57:47.000+08:00","stock":{"skuId":10781492358,"seckillStock":null,"seckillTotal":null,"stock":9999}},{"id":10781492359,"spuId":81,"title":"\u534E\u4E3A\uFF08HUAWEI\uFF09 nova \u667A\u80FD\u624B\u673A 4G\u624B\u673A \u9999\u69DF\u91D1\u9ED1\u8272 (4G+64G)\u9AD8\u914D","images":"http:\/\/image.leyou.com\/images\/5\/5\/1524297468064.jpg","price":142900,"ownSpec":"{\"\u673A\u8EAB\u989C\u8272\":\"\u9999\u69DF\u91D1\u9ED1\u8272\",\"\u5185\u5B58\":\"4GB\",\"\u673A\u8EAB\u5B58\u50A8\":\"64GB\"}","indexes":"3_0_0","enable":true,"createTime":"2018-04-21T15:57:48.000+08:00","lastUpdateTime":"2018-04-21T15:57:48.000+08:00","stock":{"skuId":10781492359,"seckillStock":null,"seckillTotal":null,"stock":9999}},{"id":10987960993,"spuId":81,"title":"\u534E\u4E3A\uFF08HUAWEI\uFF09 nova \u667A\u80FD\u624B\u673A 4G\u624B\u673A \u7693\u6708\u94F6 (4G+64G)\u9AD8\u914D","images":"http:\/\/image.leyou.com\/images\/10\/5\/1524297467695.jpg","price":142900,"ownSpec":"{\"\u673A\u8EAB\u989C\u8272\":\"\u7693\u6708\u94F6\",\"\u5185\u5B58\":\"4GB\",\"\u673A\u8EAB\u5B58\u50A8\":\"64GB\"}","indexes":"2_0_0","enable":true,"createTime":"2018-04-21T15:57:48.000+08:00","lastUpdateTime":"2018-04-21T15:57:48.000+08:00","stock":{"skuId":10987960993,"seckillStock":null,"seckillTotal":null,"stock":9999}}];
+	const skuMap = {};
+	if(skus){
+	    skus.forEach(s => {
+	        skuMap[s.indexes] = s;
+		})
+	}
+	const indexes = {};
+	for(let k in specTemplate){
+	    indexes[k] = 0;
+	}
+    var itemVm = new Vue({
+        el:"#itemApp",
+        data:{
+			spu,
+            specTemplate,
+            specifications,
+            skus: skuMap,
+			indexes,
+			num:1
+        },
+		computed:{
+            sku(){
+                const index = Object.values(this.indexes).join("_");
+                return this.skus[index];
+			},
+			specs(){
+                // sku中的参数信息
+                const tpl = JSON.parse(this.sku.ownSpec);
+                this.specifications.forEach(s => {
+                    s.params.forEach(p => {
+                        // 取出sku中的特有值
+                        p.v = tpl[p.k] || p.v;
+					})
+				})
+				return this.specifications;
+			},
+			images(){
+                if(!this.sku || !this.sku.images || this.sku.images.length <= 0){
+                    return [];
+				}
+				return this.sku.images.split(",");
+			}
+		},methods:{
+			formatPrice(val) {
+				val = val.toString();
+				return val.substring(0, val.length - 2) + "." + val.substring(val.length - 2);
+			},
+            decrement(){
+			    if(this.num > 1){
+			        this.num--;
+				}
+			},
+            addCart(){
+                // 跳转到购物车页面之前，首先进行数据保存，购物车页面才可以获取到参数数据
+                ly.store.set("cartParam",{
+                    skuId:this.sku.id,
+                    num: this.num
+                })
+                // 跳转
+                window.location = "/cart.html";
+            }
+		},
+		components:{
+            lyTop: () => import('http://www.leyou.com/js/pages/top.js')
+		}
+    });
+</script>
+</html>
