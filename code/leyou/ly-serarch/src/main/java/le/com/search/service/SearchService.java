@@ -67,7 +67,7 @@ public class SearchService {
         Set<Long> prices = this.getPrices(skus);
 
         // 获取specs
-        // HashMap<String, Object> specs = getSpecs(spu); // TODO 数据不全导致的 bug
+        HashMap<String, Object> specs = getSpecs(spu); //  数据不全导致的 bug
 
         Goods goods = new Goods();
         goods.setBrandId(spu.getBrandId());
@@ -81,7 +81,7 @@ public class SearchService {
         goods.setAll(all);
         goods.setPrice(prices);
         goods.setSkus(JsonUtils.serialize(skuVoList));
-        // goods.setSpecs(specs); // TODO 数据不全导致的 bug
+        goods.setSpecs(specs); // 数据不全导致的 bug
 
         return goods;
     }

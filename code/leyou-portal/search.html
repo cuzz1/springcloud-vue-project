@@ -302,10 +302,12 @@
                             </li>
                         </ul>
                         <div class="top-pagination">
-                            <span>共 <i style="color: #222;">7600+</i> 商品</span>
-                            <span><i style="color: red;">2</i>/123</span>
-                            <a class="btn-arrow" href="#" style="display: inline-block">&lt;</a>
-                            <a class="btn-arrow" href="#" style="display: inline-block">&gt;</a>
+                            <div class="top-pagination">
+                                <span>共 <i style="color: #222;">{{total}}</i> 商品</span>
+                                <span><i style="color: red;">{{search.page}}</i>/{{totalPage}}</span>
+                                <a class="btn-arrow" href="#" style="display: inline-block" @click="pre">&lt;</a>
+                                <a class="btn-arrow" href="#" style="display: inline-block" @click="next">&gt;</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -490,6 +492,15 @@
             // 发起请求，根据条件搜索
             this.searchFromServer();
         },
+        watch:{
+            search:{
+                deep: true,
+                handler() {
+                    this.searchFromServer();
+                }
+            }
+        }
+        ,
         methods: {
             searchFromServer() {
                 // 发起异步请求
@@ -520,12 +531,14 @@
                 }
             },
             pre() {
-                //TODO add judge
-                this.search.page--
+                if (this.search.page > 1) {
+                    this.search.page--
+                }
             },
             next() {
-                //TODO add judge
-                this.search.page++
+                if (this.search.page < this.totalPage) {
+                    this.search.page++
+                }
             },
         },
         components: {
