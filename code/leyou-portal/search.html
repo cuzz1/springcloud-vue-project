@@ -328,12 +328,12 @@
                                     </ul>
                                 </div>
                                 <div class="clearfix"></div>
-                                <!--<div class="price">-->
-                                    <!--<strong>-->
-                                        <!--<em>¥</em>-->
-                                        <!--<i>{{ly.formatPrice(goods.selected.price)}}</i>-->
-                                    <!--</strong>-->
-                                <!--</div>-->
+                                <div class="price">
+                                    <strong>
+                                        <em>¥</em>
+                                        <i>{{ly.formatPrice(goods.selected.price)}}</i>
+                                    </strong>
+                                </div>
                                 <div class="attr"><a :href="'/item/' + goods.id + '.html'" target="_blank">
                                     <em>{{goods.selected.title.length<20 ? goods.selected.title
                                         :goods.selected.title.substring(0,20)+"..."}}</em></a>
@@ -360,26 +360,15 @@
                 <div class="fr">
                     <div class="sui-pagination pagination-large">
                         <ul>
-                            <li class="prev disabled">
+                            <li :class="{prev:true,disabled:search.page===1}" @click="pre">
                                 <a href="#">«上一页</a>
                             </li>
-                            <li class="active">
-                                <a href="#">1</a>
-                            </li>
-                            <li>
-                                <a href="#">2</a>
-                            </li>
-                            <li>
-                                <a href="#">3</a>
-                            </li>
-                            <li>
-                                <a href="#">4</a>
-                            </li>
-                            <li>
-                                <a href="#">5</a>
+                            <li :class="{active: index(i) === search.page}" v-for="i in Math.min(5,totalPage)" :key="i"
+                                @click="search.page=index(i)">
+                                <a href="#">{{index(i)}}</a>
                             </li>
                             <li class="dotted"><span>...</span></li>
-                            <li class="next">
+                            <li :class="{disabled:search.page===totalPage}" @click="next">
                                 <a href="#">下一页»</a>
                             </li>
                         </ul>
@@ -483,6 +472,7 @@
     var vm = new Vue({
         el: "#searchApp",
         data: {
+            ly,
             search: {},
             goodsList: [],
             total: 0,  // 总条数
@@ -494,6 +484,7 @@
                 return;
             }
             const search = ly.parse(location.search.substring(1));
+            search.page = parseInt(search.page) || 1;
             // 把参数保存
             this.search = search;
             // 发起请求，根据条件搜索
@@ -516,7 +507,26 @@
                         });
                         this.goodsList = resp.data.items;
                     })
-            }
+            },
+            index(i) {
+                if (this.search.page <= 3 || this.totalPage <= 5) {
+                    // 当前页小于3，则页码就是从 i 开始
+                    return i;
+                } else if (this.search.page <= this.totalPage - 2) {
+                    // 大于3，则从page-2开始，然后逐个加1
+                    return this.search.page - 3 + i;
+                } else {
+                    return this.totalPage - 5 + i;
+                }
+            },
+            pre() {
+                //TODO add judge
+                this.search.page--
+            },
+            next() {
+                //TODO add judge
+                this.search.page++
+            },
         },
         components: {
             lyTop: () => import("./js/pages/top.js")
