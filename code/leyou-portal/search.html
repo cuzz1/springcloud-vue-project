@@ -495,8 +495,13 @@
         watch:{
             search:{
                 deep: true,
-                handler() {
-                    this.searchFromServer();
+                handler(val, old) {
+                    if (!old || !old.key) {
+                        // 如果旧的search值为空，或者search中的key为空，证明是第一次
+                        return;
+                    }
+                    // this.searchFromServer(); 这样会使页面刷新把查询参数弄没了
+                    location.search = "?" + ly.stringify(this.search);
                 }
             }
         }
