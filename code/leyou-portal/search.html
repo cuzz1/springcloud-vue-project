@@ -56,12 +56,14 @@
             margin-right: 10px;
         }
 
-        /*        .logo-list li{
-                    padding:8px;
-                }
-               .logo-list li:hover{
-                    background-color: #f3f3f3;
-                }*/
+        .logo-list li {
+            padding: 8px;
+        }
+
+        .logo-list li:hover {
+            background-color: #f3f3f3;
+        }
+
         .type-list a:hover {
             color: #1299ec;
         }
@@ -124,149 +126,34 @@
             </div>
             <!--selector-->
             <div class="clearfix selector">
-                <div class="type-wrap">
-                    <div class="fl key">分类</div>
+                <div class="type-wrap" v-for="filter in filters" :key="filter.k" v-if="filter.k !== 'brandId'">
+                    <div class="fl key">{{filter.k ==='cid3'? "分类" : filter.k}}</div>
                     <div class="fl value">
                         <ul class="type-list">
-                            <li>
-                                <a>手机</a>
+                            <li v-for="(option,i) in filter.options" :key="i" @click="selectFilter(filter.k,option)">
+                                <a>{{option.name}}</a>
                             </li>
-                            <li>
-                                <a>儿童手表</a>
-                            </li>
+
                         </ul>
                     </div>
                     <div class="fl ext"></div>
                 </div>
-                <div class="type-wrap logo">
+                <div class="type-wrap logo" v-else>
                     <div class="fl key brand">品牌</div>
                     <div class="value logos">
                         <ul class="logo-list">
-                            <li><img src="img/_/phone01.png"/></li>
-                            <li><img src="img/_/phone02.png"/></li>
-                            <li><img src="img/_/phone03.png"/></li>
-                            <li><img src="img/_/phone04.png"/></li>
-                            <li><img src="img/_/phone05.png"/></li>
-                            <li><img src="img/_/phone06.png"/></li>
-                            <li><img src="img/_/phone07.png"/></li>
-                            <li><img src="img/_/phone08.png"/></li>
-                            <li><img src="img/_/phone09.png"/></li>
-                            <li><img src="img/_/phone10.png"/></li>
-                            <li><img src="img/_/phone11.png"/></li>
-                            <li><img src="img/_/phone12.png"/></li>
-                            <li><img src="img/_/phone13.png"/></li>
-                            <li><img src="img/_/phone14.png"/></li>
-                            <li><img src="img/_/phone05.png"/></li>
-                            <li><img src="img/_/phone06.png"/></li>
-                            <li><img src="img/_/phone07.png"/></li>
-                            <li style="text-align: center"><a style="line-height: 30px; font-size: 12px" href="#">黑马</a>
+                            <li v-for="(option,j) in filter.options" :key="j" v-if="option.image"
+                                @click="selectFilter(filter.k,option)">
+                                <img :src="option.image"/>
+                            </li>
+
+                            <li style="text-align: center" v-else @click="selectFilter(filter.k,option)">
+                                <a style="line-height: 30px; font-size: 12px" href="#">{{option.name}}</a>
                             </li>
                         </ul>
                     </div>
                     <div class="fl ext">
                         <a href="javascript:void(0);" class="sui-btn">多选</a>
-                    </div>
-                </div>
-                <div class="type-wrap">
-                    <div class="fl key">网络制式</div>
-                    <div class="fl value">
-                        <ul class="type-list">
-                            <li>
-                                <a>GSM（移动/联通2G）</a>
-                            </li>
-                            <li>
-                                <a>电信2G</a>
-                            </li>
-                            <li>
-                                <a>电信3G</a>
-                            </li>
-                            <li>
-                                <a>移动3G</a>
-                            </li>
-                            <li>
-                                <a>联通3G</a>
-                            </li>
-                            <li>
-                                <a>联通4G</a>
-                            </li>
-                            <li>
-                                <a>电信3G</a>
-                            </li>
-                            <li>
-                                <a>移动3G</a>
-                            </li>
-                            <li>
-                                <a>联通3G</a>
-                            </li>
-                            <li>
-                                <a>联通4G</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="fl ext"></div>
-                </div>
-                <div class="type-wrap">
-                    <div class="fl key">显示屏尺寸</div>
-                    <div class="fl value">
-                        <ul class="type-list">
-                            <li>
-                                <a>4.0-4.9英寸</a>
-                            </li>
-                            <li>
-                                <a>4.0-4.9英寸</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="fl ext"></div>
-                </div>
-                <div class="type-wrap">
-                    <div class="fl key">摄像头像素</div>
-                    <div class="fl value">
-                        <ul class="type-list">
-                            <li>
-                                <a>1200万以上</a>
-                            </li>
-                            <li>
-                                <a>800-1199万</a>
-                            </li>
-                            <li>
-                                <a>1200-1599万</a>
-                            </li>
-                            <li>
-                                <a>1600万以上</a>
-                            </li>
-                            <li>
-                                <a>无摄像头</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="fl ext"></div>
-                </div>
-                <div class="type-wrap">
-                    <div class="fl key">价格</div>
-                    <div class="fl value">
-                        <ul class="type-list">
-                            <li>
-                                <a>0-500元</a>
-                            </li>
-                            <li>
-                                <a>500-1000元</a>
-                            </li>
-                            <li>
-                                <a>1000-1500元</a>
-                            </li>
-                            <li>
-                                <a>1500-2000元</a>
-                            </li>
-                            <li>
-                                <a>2000-3000元 </a>
-                            </li>
-                            <li>
-                                <a>3000元以上</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="fl ext">
                     </div>
                 </div>
                 <div class="type-wrap" style="text-align: center">
@@ -478,7 +365,8 @@
             search: {},
             goodsList: [],
             total: 0,  // 总条数
-            totalPage: 0 // 总页数
+            totalPage: 0, // 总页数
+            filters: [], //过滤项
         },
         created() {
             // 判断是否有请求参数
@@ -492,8 +380,8 @@
             // 发起请求，根据条件搜索
             this.searchFromServer();
         },
-        watch:{
-            search:{
+        watch: {
+            search: {
                 deep: true,
                 handler(val, old) {
                     if (!old || !old.key) {
@@ -522,6 +410,20 @@
                             goods.selected = goods.skus[0];
                         });
                         this.goodsList = resp.data.items;
+                        // 获取过滤结果
+                        this.filters.push(
+                            {
+                                k: "cid3",
+                                options: resp.data.categories
+                            }
+                        );
+                        this.filters.push(
+                            {
+                                k: "brandId",
+                                options: resp.data.brands,
+                            }
+                        );
+
                     })
             },
             index(i) {

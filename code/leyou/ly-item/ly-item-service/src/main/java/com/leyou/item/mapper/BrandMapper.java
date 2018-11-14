@@ -4,6 +4,8 @@ import com.leyou.item.pojo.Brand;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import tk.mybatis.mapper.additional.idlist.IdListMapper;
+import tk.mybatis.mapper.common.IdsMapper;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.List;
  * @Date: 2018/11/1 14:45
  * @Description:
  */
-public interface BrandMapper extends Mapper<Brand> {
+public interface BrandMapper extends Mapper<Brand>, IdListMapper<Brand, Long> {
     /**
      * 新增商品分类和品牌中间表数据
      * @param cid 商品分类id

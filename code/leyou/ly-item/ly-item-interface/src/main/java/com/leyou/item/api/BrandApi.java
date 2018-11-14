@@ -42,4 +42,12 @@ public interface BrandApi {
      */
     @GetMapping("brand/{id}")
     Brand queryBrandById(@PathVariable("id") Long id);
+
+    /**
+     * 根据id列表查询品牌列表
+     * @param ids
+     * @return
+     */
+    @GetMapping("brand/list")
+    List<Brand> queryBrandByIds(@RequestParam("ids") List<Long> ids);
 }
