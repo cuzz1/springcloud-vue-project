@@ -2,7 +2,9 @@ package com.leyou.item.web;
 
 import com.leyou.item.pojo.SpecGroup;
 import com.leyou.item.pojo.SpecParam;
+import com.leyou.item.service.GoodsService;
 import com.leyou.item.service.SpecificationService;
+import org.apache.ibatis.io.ResolverUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,4 +52,16 @@ public class SpecificationController {
             @RequestParam(value="generic", required = false) Boolean generic){
         return ResponseEntity.ok(specificationService.querySpecParams(gid, cid, searching,generic));
     }
+
+    /**
+     * 根据分类查询规格组及组内分类
+     * @param cid
+     * @return
+     */
+    @GetMapping("{cid}")
+    public ResponseEntity<List<SpecGroup>> querySpecsByCid(@PathVariable("cid") Long cid) {
+        return ResponseEntity.ok(specificationService.querySpecsByCid(cid));
+    }
+
+
 }

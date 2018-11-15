@@ -126,12 +126,13 @@
             </div>
             <!--selector-->
             <div class="clearfix selector">
-                <div class="type-wrap" v-for="filter in filters" :key="filter.k" v-if="filter.k !== 'brandId'">
+                <div class="type-wrap" v-for="(filter, n) in remainFilters" :key="filter.k" v-if="filter.k !== 'brandId'"
+                     v-show="n <= 5 || show">
                     <div class="fl key">{{filter.k ==='cid3'? "分类" : filter.k}}</div>
                     <div class="fl value">
                         <ul class="type-list">
-                            <li v-for="(option,i) in filter.options" :key="i" @click="selectFilter(filter.k,option)">
-                                <a>{{option.name}}</a>
+                            <li v-for="(option,i) in filter.options" :key="i" @click="selectFilter(filter.k, option)">
+                                <a>{{option.name || option}}</a>
                             </li>
 
                         </ul>
@@ -143,11 +144,11 @@
                     <div class="value logos">
                         <ul class="logo-list">
                             <li v-for="(option,j) in filter.options" :key="j" v-if="option.image"
-                                @click="selectFilter(filter.k,option)">
+                                @click="selectFilter(filter.k, option)">
                                 <img :src="option.image"/>
                             </li>
 
-                            <li style="text-align: center" v-else @click="selectFilter(filter.k,option)">
+                            <li style="text-align: center" v-else @click="selectFilter(filter.k, option)">
                                 <a style="line-height: 30px; font-size: 12px" href="#">{{option.name}}</a>
                             </li>
                         </ul>
@@ -157,13 +158,13 @@
                     </div>
                 </div>
                 <div class="type-wrap" style="text-align: center">
-                    <v-btn small flat>
+                    <v-btn small flat v-show="!show" @click="show=true">
                         更多
-                        <v-icon>arrow_drop_down</v-icon>
+                        <!--<v-icon>arrow_drop_down</v-icon>-->
                     </v-btn>
-                    <v-btn small="" flat>
+                    <v-btn small flat v-show="show" @click="show=false">
                         收起
-                        <v-icon>arrow_drop_up</v-icon>
+                        <!--<v-icon>arrow_drop_up</v-icon>-->
                     </v-btn>
                 </div>
             </div>
@@ -362,21 +363,35 @@
         el: "#searchApp",
         data: {
             ly,
-            search: {},
+            search: {
+                key: "",
+                page: 1,
+                filter: {}
+            },
             goodsList: [],
             total: 0,  // 总条数
             totalPage: 0, // 总页数
             filters: [], //过滤项
+            show: false, // 是否显示更多
         },
         created() {
             // 判断是否有请求参数
             if (!location.search) {
                 return;
             }
+            // 将请求参数转为对象
+            //这个search是bom对象中location中的属性search
             const search = ly.parse(location.search.substring(1));
-            search.page = parseInt(search.page) || 1;
-            // 把参数保存
+
+            search.page = search.page ? parseInt(search.page) : 1;
+
+            //初始化过滤条件filter防止被覆盖
+            search.filter = search.filter || {};
+
+            // 记录在data的search对象中
+            //这个是刚才vue中自定义的search
             this.search = search;
+
             // 发起请求，根据条件搜索
             this.searchFromServer();
         },
@@ -423,6 +438,10 @@
                                 options: resp.data.brands,
                             }
                         );
+                        // 其他规格
+                        resp.data.specs.forEach(spec => {
+                            this.filters.push(spec);
+                        });
 
                     })
             },
@@ -447,6 +466,21 @@
                     this.search.page++
                 }
             },
+            selectFilter(k, o){
+                const obj = {};
+                Object.assign(obj, this.search);
+                if(k === 'cid3' || k === 'brandId'){
+                    o = o.id;
+                }
+                obj.filter[k] = o;
+                this.search = obj;
+            }
+        },
+        computed:{
+            remainFilters(){
+                const keys=Object.keys(this.search.filter);
+                return this.filters.filter(f=>!keys.includes(f.k)&&f.options.length>1);
+            }
         },
         components: {
             lyTop: () => import("./js/pages/top.js")

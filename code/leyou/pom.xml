@@ -15,6 +15,7 @@
         <module>ly-common</module>
         <module>ly-upload</module>
         <module>ly-serarch</module>
+        <module>ly-page</module>
         <!--<module>ly-upload</module>-->
         <!--<module>ly-search</module>-->
         <!--<module>ly-page</module>-->

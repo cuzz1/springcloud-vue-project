@@ -5,7 +5,9 @@ import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.net.UnknownServiceException;
+import java.util.List;
 
 /**
  * @Author: cuzz
@@ -22,4 +24,7 @@ public class SpecGroup {
     private Long cid;
 
     private String name;
+
+    @Transient
+    private List<SpecParam> params; // 该组下的所有规格参数集合
 }

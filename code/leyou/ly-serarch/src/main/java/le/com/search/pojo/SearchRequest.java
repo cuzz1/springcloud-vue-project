@@ -1,5 +1,7 @@
 package le.com.search.pojo;
 
+import java.util.Map;
+
 /**
  * @Author: cuzz
  * @Date: 2018/11/12 14:47
@@ -9,6 +11,12 @@ public class SearchRequest {
     private String key;// 搜索条件
 
     private Integer page;// 当前页
+
+    public Map<String, String> getFilter() {
+        return filter;
+    }
+
+    private Map<String, String> filter;
 
     private static final Integer DEFAULT_SIZE = 20;// 每页大小，不从页面接收，而是固定大小
     private static final Integer DEFAULT_PAGE = 1;// 默认页

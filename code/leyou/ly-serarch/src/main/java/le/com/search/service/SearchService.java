@@ -20,12 +20,16 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -218,7 +222,8 @@ public class SearchService {
         // 分页
         queryBuilder.withPageable(PageRequest.of(page, size));
         // 过滤
-        queryBuilder.withQuery(QueryBuilders.matchQuery("all", request.getKey()));
+        QueryBuilder query = buildBaseQuery(request);
+        queryBuilder.withQuery(query);
         // 聚合分类品牌
         String categoryAggName = "category_agg";
         String brandAggName = "brand_agg";
@@ -241,9 +246,35 @@ public class SearchService {
         List<Category> categories = getCategoryAggResult(aggs.get(categoryAggName));
         List<Brand> brands = getBrandAggResult(aggs.get(brandAggName));
 
+        // 完成规格参数聚合
+        // 判断商品分类数量，看是否需要对规格参数进行聚合
+        List<Map<String, Object>> specs = null;
+        if (categories != null && categories.size() == 1) {
+            // 如果分类只剩下一个，才进行规格参数过滤
+            specs = getSpecs(categories.get(0).getId(), query);
+        }
+
 
         // 返回结果
-        return new SearchResult(total, totalPage, result.getContent(), categories, brands);
+        return new SearchResult(total, totalPage, result.getContent(), categories, brands, specs);
+    }
+
+    private QueryBuilder buildBaseQuery(SearchRequest request) {
+        // 创建布尔查询
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        // 查询条件
+        queryBuilder.must(QueryBuilders.matchQuery("all",request.getKey()));
+        // 过滤条件
+        Map<String, String> map = request.getFilter();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            String key = entry.getKey();
+            // 处理key
+            if (!"cid3".equals(key) && ! "brandId".equals(key)) {
+                key = "spec." + key + ".keyword";
+            }
+            queryBuilder.filter(QueryBuilders.termQuery(key, entry.getValue()));
+        }
+        return queryBuilder;
     }
 
     // 解析品牌聚合结果
@@ -272,6 +303,47 @@ public class SearchService {
             return categories;
         } catch (Exception e) {
             log.error("[搜索服务]查询分类异常", e);
+            return null;
+        }
+    }
+
+    // 聚合规格参数
+    private List<Map<String, Object>> getSpecs(Long cid, QueryBuilder query) {
+        try {
+            // 根据分类查询规格
+            List<SpecParam> params =
+                    this.specificationClient.querySpecParams(null, cid, true, null);
+
+            // 创建集合，保存规格过滤条件
+            List<Map<String, Object>> specs = new ArrayList<>();
+
+            NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+            queryBuilder.withQuery(query);
+
+            // 聚合规格参数
+            params.forEach(p -> {
+                String key = p.getName();
+                queryBuilder.addAggregation(AggregationBuilders.terms(key).field("specs." + key + ".keyword"));
+
+            });
+
+            // 查询
+            Map<String, Aggregation> aggs = this.template.query(queryBuilder.build(),
+                    SearchResponse::getAggregations).asMap();
+
+            // 解析聚合结果
+            params.forEach(param -> {
+                Map<String, Object> spec = new HashMap<>();
+                String key = param.getName();
+                spec.put("k", key);
+                StringTerms terms = (StringTerms) aggs.get(key);
+                spec.put("options", terms.getBuckets().stream().map(StringTerms.Bucket::getKeyAsString));
+                specs.add(spec);
+            });
+
+            return specs;
+        }catch (Exception e){
+            log.error("[搜索服务]规格聚合出现异常：", e);
             return null;
         }
     }
