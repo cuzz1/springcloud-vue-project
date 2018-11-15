@@ -7,9 +7,22 @@ spring:
     url: jdbc:mysql://localhost:3306/leyou
     username: root
     password: 123456
-#    hikari:
-#      maximum-pool-size: 30
-#      minimum-idle: 10
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 10
+  rabbitmq:
+    host: 111.230.104.64
+    username: guest
+    password: guest
+    virtual-host: /leyou
+    template:
+      retry:
+        enabled: true
+        initial-interval: 10000ms
+        max-interval: 300000ms
+        multiplier: 2
+      exchange: ly.item.exchange
+    publisher-confirms: true
 eureka:
   client:
     service-url:
@@ -23,4 +36,6 @@ eureka:
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
 

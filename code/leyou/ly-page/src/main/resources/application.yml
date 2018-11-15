@@ -6,6 +6,11 @@ spring:
     name: page-service
   thymeleaf:
     cache: false # 关闭缓存
+  rabbitmq:
+    host: 111.230.104.64
+    username: guest
+    password: guest
+    virtual-host: /leyou
 eureka:
   client:
     service-url:
