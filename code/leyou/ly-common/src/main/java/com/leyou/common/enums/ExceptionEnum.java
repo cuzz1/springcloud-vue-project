@@ -3,6 +3,7 @@ package com.leyou.common.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.omg.CORBA.INVALID_ACTIVITY;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -25,7 +26,10 @@ public enum ExceptionEnum {
     SPEC_PARAM_NOT_FOUND(404,"商品规格参数不存在"),
     GOODS_NOT_FOUND(404,"商品不存在"),
     SPU_DETAIL_NOT_FOUND(404, "商品详情不存在"),
-    GOODS_SKU_NOT_FOUND(404,"sku没有找到");
+    GOODS_SKU_NOT_FOUND(404,"sku没有找到"),
+    INVALID_USER_DATA_TYPE(400, "请求参数有误"),
+    INVALID_CODE(400, "短息验证码有误"),
+    ;
 
 
     private int code;

@@ -186,7 +186,7 @@
             createVerifyCode() {// 生成短信验证码
                 this.$validator.validate("phone").then(r => {
                     if (r) {
-                        leyou.http.post("/user/send", "phone=" + this.user.phone);
+                        leyou.http.post("/user/code", "phone=" + this.user.phone);
                     }
                 });
 
