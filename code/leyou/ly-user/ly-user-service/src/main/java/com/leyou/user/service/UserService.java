@@ -11,6 +11,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -99,5 +100,22 @@ public class UserService {
                 log.error("删除缓存验证码失败，code：{}", code, e);
             }
         }
+    }
+
+    public User queryUser(String username, String password) {
+        // 查询
+        User record = new User();
+        record.setUsername(username);
+        User user = this.userMapper.selectOne(record);
+        // 校验用户名
+        if (user == null) {
+            throw new LyException(ExceptionEnum.INVALID_USERNAME);
+        }
+        // 校验密码
+        if (!user.getPassword().equals(CodecUtils.md5Hex(password, user.getSalt()))) {
+            throw new LyException(ExceptionEnum.INVALID_PASSWORD);
+        }
+        // 用户名密码都正确
+        return user;
     }
 }
