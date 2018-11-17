@@ -29,8 +29,9 @@ public enum ExceptionEnum {
     GOODS_SKU_NOT_FOUND(404,"sku没有找到"),
     INVALID_USER_DATA_TYPE(400, "请求参数有误"),
     INVALID_CODE(400, "短息验证码有误"),
-    INVALID_USERNAME(400, "无效用户名"),
-    INVALID_PASSWORD(400, "密码有误"),
+    INVALID_USERNAME_OR_PASSWORD(400, "无效用户名或密码"),
+    GENERATE_TOKEN_ERROR(500, "生成token失败"),
+    UNAUTHORIZED(403, "未授权"),
     ;
 
 

@@ -109,11 +109,11 @@ public class UserService {
         User user = this.userMapper.selectOne(record);
         // 校验用户名
         if (user == null) {
-            throw new LyException(ExceptionEnum.INVALID_USERNAME);
+            throw new LyException(ExceptionEnum.INVALID_USERNAME_OR_PASSWORD);
         }
         // 校验密码
         if (!user.getPassword().equals(CodecUtils.md5Hex(password, user.getSalt()))) {
-            throw new LyException(ExceptionEnum.INVALID_PASSWORD);
+            throw new LyException(ExceptionEnum.INVALID_USERNAME_OR_PASSWORD);
         }
         // 用户名密码都正确
         return user;

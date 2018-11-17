@@ -17,6 +17,7 @@
         <module>ly-page</module>
         <module>ly-sms</module>
         <module>ly-user</module>
+        <module>ly-auth-center</module>
     </modules>
     <packaging>pom</packaging>
 

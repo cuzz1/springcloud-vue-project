@@ -15,11 +15,14 @@ eureka:
 zuul:
   prefix: /api # 添加路由前缀
   retryable: true
+  add-host-header: true  # 添加header
+  sensitive-headers:     # 把敏感头去掉
   routes:
     # 微服务名: 要映射到到地址
     item-service: /item/** # 将商品微服务映射到/item/**
     search-service: /search/** # 将查询微服务映射到/search/**
     user-service: /user/**
+    auth-service: /auth/**
     upload-service:
       path: /upload/** # 将上传微服务映射到/upload/**
       serviceId: upload-service

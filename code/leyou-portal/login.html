@@ -109,9 +109,9 @@
         },
         methods:{
             login(){
-                leyou.http.post("/user/login",leyou.stringify(this.form))
+                leyou.http.post("/auth/login",leyou.stringify(this.form))
                     .then(resp => {
-                        if(resp.status === 200){
+                        if(resp.status === 200 || resp.status === 204){
                             const url = leyou.getUrlParam("returnUrl");
                             window.location = url || 'http://www.leyou.com';
                         }
