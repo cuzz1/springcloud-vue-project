@@ -1,0 +1,70 @@
+server:
+  port: 8089
+spring:
+  application:
+    name: order-service
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/leyou?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false
+    username: root
+    password: 123456
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 10
+  rabbitmq:
+    host: 192.168.19.121
+    username: /leyou
+    password: leyou
+    virtual-host: /leyou
+    template:
+      retry:
+        enabled: true
+        initial-interval: 10000ms
+        max-interval: 300000ms
+        multiplier: 2
+      exchange: leyou.order.exchange
+    publisher-confirms: true
+  redis:
+    host: 192.168.19.121
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+    registry-fetch-interval-seconds: 5
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true  #当你获取host时，返回的不是主机名，而是ip
+    ip-address: 127.0.0.1
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+
+mybatis:
+  type-aliases-package: com.leyou.order.pojo
+  mapper-locations: mapper/OrderMapper.xml
+
+ribbon:
+  ConnectTimeout: 4000 # 连接超时时间(ms)
+  ReadTimeout: 2000 # 通信超时时间(ms)
+  OkToRetryOnAllOperations: true # 是否对所有操作重试
+  MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数
+  MaxAutoRetries: 1 # 同一实例的重试次数
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMillisecond: 10000 # 熔断超时时长：10000ms
+
+leyou:
+  worker:
+    workerId: 1
+    dataCenterId: 1
+  jwt:
+    cookieName: LY_TOKEN
+    pubKeyPath: G:\\tmp\\rsa\\rsa.pub # 公钥地址
+  pay:
+    appId: wx8397f8696b538317
+    mchId: 1473426802
+    key: T6m9iK73b0kn9g5v426MKfHQH7X8rKwb
+    connectTimeoutMs: 5000
+    readTimeoutMs: 10000

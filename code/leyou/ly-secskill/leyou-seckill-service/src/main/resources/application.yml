@@ -1,0 +1,65 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: seckill-service
+  data:
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: 192.168.19.121:9300
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/leyou?characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: 123456
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 10
+  rabbitmq:
+    virtual-host: /leyou
+    username: /leyou
+    password: leyou
+    host: 192.168.19.121
+    template:
+      exchange: leyou.order.exchange
+    publisher-confirms: true
+  redis:
+    host: 192.168.19.121
+  jackson:
+    default-property-inclusion: non_null # 配置json处理时忽略空值
+  resources:
+    add-mappings: true
+    chain:
+      enabled: true
+      gzipped: true
+      html-application-cache: true
+    cache:
+      period: 3600m
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+    registry-fetch-interval-seconds: 5
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true  #当你获取host时，返回的不是主机名，而是ip
+    ip-address: 127.0.0.1
+    lease-expiration-duration-in-seconds: 10 #10秒不发送九过期
+    lease-renewal-interval-in-seconds: 5 #每隔5秒发一次心跳
+ribbon:
+  ConnectTimeout: 4000 # 连接超时时间(ms)
+  ReadTimeout: 2000 # 通信超时时间(ms)
+  OkToRetryOnAllOperations: true # 是否对所有操作重试
+  MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数
+  MaxAutoRetries: 1 # 同一实例的重试次数
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMillisecond: 10000 # 熔断超时时长：10000ms
+
+leyou:
+  jwt:
+    cookieName: LY_TOKEN
+    pubKeyPath: G:\\tmp\\rsa\\rsa.pub # 公钥地址
