@@ -1,0 +1,22 @@
+server:
+  port: 8088
+spring:
+  application:
+    name: cart-service
+  redis:
+    host: 127.0.0.1
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+    registry-fetch-interval-seconds: 5
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    instance-id: ${eureka.instance.ip-address}.${server.port}
+    lease-renewal-interval-in-seconds: 3
+    lease-expiration-duration-in-seconds: 10
+ly:
+  jwt:
+    pubKeyPath: E:\User\data\rsa\rsa.pub # 公钥地址
+    cookieName: LY_TOKEN

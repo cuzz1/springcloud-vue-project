@@ -13,11 +13,12 @@
         <module>ly-item</module>
         <module>ly-common</module>
         <module>ly-upload</module>
-        <module>ly-serarch</module>
+        <module>ly-search</module>
         <module>ly-page</module>
         <module>ly-sms</module>
         <module>ly-user</module>
         <module>ly-auth-center</module>
+        <module>ly-cart</module>
     </modules>
     <packaging>pom</packaging>
 
